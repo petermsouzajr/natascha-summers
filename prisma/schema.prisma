@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  passwordHash      String
+  role              String    @default("user")
+  isVerified        Boolean   @default(false)
+  verificationToken String?   @unique
+  resetToken        String?   @unique
+  resetTokenExpiry  DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  suggestions ContentSuggestion[]
+  votes       Vote[]
+}
+
+model ContentSuggestion {
+  id          Int      @id @default(autoincrement())
+  title       String
+  type        String
+  tmdbId      String?
+  posterUrl   String?
+  status      String   @default("pending")
+  suggestedBy String?  @map("suggested_by")
+  createdAt   DateTime @default(now())
+
+  suggester User?  @relation(fields: [suggestedBy], references: [id])
+  votes     Vote[]
+
+  @@unique([title, type])
+  @@map("content_suggestions")
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  contentId Int      @map("content_id")
+  userId    String   @map("user_id")
+  voteType  String
+  paymentId String   @unique @map("payment_id")
+  createdAt DateTime @default(now())
+
+  content ContentSuggestion @relation(fields: [contentId], references: [id])
+  user    User              @relation(fields: [userId], references: [id])
+
+  @@map("votes")
+}
+
+model RecentContent {
+  id          Int      @id @default(autoincrement())
+  title       String
+  type        String
+  youtubeLink String?
+  posterUrl   String?
+  createdAt   DateTime @default(now())
+
+  @@map("recent_content")
+}
