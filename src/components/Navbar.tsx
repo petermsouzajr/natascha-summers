@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Youtube, Instagram, Heart, LogOut, User, Shield } from "lucide-react";
+import { Youtube, Heart, LogOut, User, Shield } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();

@@ -11,15 +11,18 @@ import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 function VerifyContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [message, setMessage] = useState("");
+
+  // Derive the initial state from the token so we never call setState
+  // synchronously inside an effect (satisfies react-hooks/set-state-in-effect).
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    token ? "loading" : "error"
+  );
+  const [message, setMessage] = useState(
+    token ? "" : "No verification token provided."
+  );
 
   useEffect(() => {
-    if (!token) {
-      setStatus("error");
-      setMessage("No verification token provided.");
-      return;
-    }
+    if (!token) return;
 
     fetch(`/api/auth/verify?token=${token}`)
       .then((r) => r.json())
