@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { Prisma } from "@prisma/client";
 
-type SuggestionWithVotes = Prisma.ContentSuggestionGetPayload<{
-  include: { votes: true };
-}>;
+type SuggestionWithVotes = Awaited<
+  ReturnType<typeof prisma.contentSuggestion.findMany<{ include: { votes: true } }>>
+>[number];
+
 
 
 export async function GET(req: NextRequest) {
