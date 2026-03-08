@@ -4,11 +4,13 @@ import { prisma } from "@/lib/db";
 import { getAuthUser } from "@/lib/auth";
 import { voteSchema } from "@/lib/validations";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-02-25.clover",
-});
 
 export async function POST(req: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2026-02-25.clover",
+  });
+
+
   const user = await getAuthUser();
   if (!user) {
     return NextResponse.json(
