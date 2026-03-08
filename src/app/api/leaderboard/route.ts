@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { Prisma } from "@prisma/client";
+
+type SuggestionWithVotes = Prisma.ContentSuggestionGetPayload<{
+  include: { votes: true };
+}>;
+
 
 export async function GET(req: NextRequest) {
   const type = req.nextUrl.searchParams.get("type") ?? "movie";
@@ -10,7 +16,7 @@ export async function GET(req: NextRequest) {
     orderBy: { createdAt: "asc" },
   });
 
-  const withNetVotes = suggestions.map((s) => {
+  const withNetVotes = suggestions.map((s: SuggestionWithVotes) => {
     const upvotes = s.votes.filter((v) => v.voteType === "up").length;
     const downvotes = s.votes.filter((v) => v.voteType === "down").length;
     return {
