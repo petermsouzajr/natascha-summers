@@ -21,16 +21,31 @@ function createPrismaClient(): PrismaClient {
   });
 }
 
-// Bust the cache if the schema version has changed.
-const needsFreshClient =
-  !globalForPrisma.prisma ||
-  globalForPrisma.prismaSchemaVersion !== SCHEMA_VERSION;
+// Lazy singleton: only instantiate the client on first actual use.
+// This prevents the build-time "DATABASE_URL not set" crash when Next.js
+// imports route modules during static analysis / page data collection.
+function getClient(): PrismaClient {
+  const needsFresh =
+    !globalForPrisma.prisma ||
+    globalForPrisma.prismaSchemaVersion !== SCHEMA_VERSION;
 
-export const prisma = needsFreshClient
-  ? createPrismaClient()
-  : globalForPrisma.prisma!;
+  if (needsFresh) {
+    const client = createPrismaClient();
+    if (process.env.NODE_ENV !== "production") {
+      globalForPrisma.prisma = client;
+      globalForPrisma.prismaSchemaVersion = SCHEMA_VERSION;
+    }
+    return client;
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-  globalForPrisma.prismaSchemaVersion = SCHEMA_VERSION;
+  return globalForPrisma.prisma!;
 }
+
+// Export a Proxy so callers use `prisma.user.findMany(...)` as normal,
+// but the real PrismaClient isn't created until the first property access.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    return Reflect.get(getClient(), prop);
+  },
+});
