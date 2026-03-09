@@ -86,10 +86,11 @@ export async function POST(req: NextRequest) {
       success: true,
       message: `"${title}" has been submitted for admin review!`,
     });
-  } catch (err: any) {
-    console.error("Suggest error:", err?.message ?? err);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+    console.error("Suggest error:", err instanceof Error ? err.message : err);
     return NextResponse.json(
-      { success: false, message: err?.message || "Something went wrong. Please try again." },
+      { success: false, message: msg },
       { status: 500 }
     );
   }

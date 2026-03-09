@@ -265,7 +265,7 @@ function RequestsContent() {
           watch next?
         </h1>
         <p className="font-sans mt-4 text-xl text-zinc-400">
-          Cast your vote 🗳️ — the top picks get reacted to first. <br /> It's FREE to add to the watchlist, but it costs{" "}
+          Cast your vote 🗳️ — the top picks get reacted to first. <br /> It&apos;s FREE to add to the watchlist, but it costs{" "}
           <span className="font-bold text-primary">£1/$1</span> to vote (multiple votes allowed)
         </p>
       </div>
@@ -425,7 +425,7 @@ function RequestsContent() {
               Cast Your {voteDialogItem?.type === "up" ? "Up" : "Down"}vote
             </DialogTitle>
             <DialogDescription className="font-sans text-base text-zinc-400 mt-2">
-              How many {voteDialogItem?.type}votes for <span className="text-white font-bold">"{voteDialogItem?.title}"</span>?
+              How many {voteDialogItem?.type}votes for <span className="text-white font-bold">&quot;{voteDialogItem?.title}&quot;</span>?
             </DialogDescription>
           </DialogHeader>
 

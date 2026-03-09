@@ -24,7 +24,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { CheckCircle, XCircle, Trash2, Plus, Loader2, Film, Tv, Star, Pencil, AlertTriangle } from "lucide-react";
-import { upNextSchema, type UpNextInput, type UpNextSchemaInput } from "@/lib/validations";
+import { upNextSchema, type UpNextInput } from "@/lib/validations";
 
 interface Suggestion {
   id: number;
@@ -62,13 +62,14 @@ export default function AdminPage() {
     watch,
     reset,
     formState: { errors, isSubmitting },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useForm<any>({
     resolver: zodResolver(upNextSchema),
     defaultValues: {
       type: "movie",
       hasCosplay: false,
       title: "",
-      releaseDate: "" as any,
+      releaseDate: "",
       details: "",
     },
   });
@@ -240,7 +241,7 @@ export default function AdminPage() {
                         <span className="font-heading text-lg font-black text-white uppercase tracking-tight">Pending Suggestions</span>
                       </div>
                       <div className="space-y-2 text-sm">
-                        <p className="text-zinc-300"><span className="text-primary font-bold">PURPOSE:</span> Review titles submitted by fans via the "Requests" page.</p>
+                        <p className="text-zinc-300"><span className="text-primary font-bold">PURPOSE:</span> Review titles submitted by fans via the &quot;Requests&quot; page.</p>
                         <p className="text-zinc-300"><span className="text-primary font-bold">ACTION:</span> Click **Approve** to move a title to the live Leaderboard, or **Deny** to hide/reject it.</p>
                         <p className="text-white font-bold flex items-center gap-2 mt-2">
                           <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
@@ -481,7 +482,7 @@ export default function AdminPage() {
                       </div>
                       {item.details && (
                         <p className="font-sans text-xs text-zinc-400 leading-relaxed italic border-l-2 border-primary/30 pl-3">
-                          "{item.details}"
+                          &quot;{item.details}&quot;
                         </p>
                       )}
                     </div>
@@ -503,7 +504,7 @@ export default function AdminPage() {
                   Are you sure?
                 </DialogTitle>
                 <DialogDescription className="font-sans text-zinc-400 text-base py-4">
-                  This will permanently delete this "Up Next" item. This action cannot be undone.
+                  This will permanently delete this &quot;Up Next&quot; item. This action cannot be undone.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="gap-2 sm:gap-0">
@@ -563,19 +564,21 @@ export default function AdminPage() {
   );
 }
 
-function EditUpNextModal({ item, onClose, onSave }: { item: UpNextItem, onClose: () => void, onSave: (data: any) => Promise<void> }) {
+type EditUpNextModalProps = { item: UpNextItem; onClose: () => void; onSave: (data: UpNextInput) => Promise<void> };
+function EditUpNextModal({ item, onClose, onSave }: EditUpNextModalProps) {
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { isSubmitting },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useForm<any>({
     resolver: zodResolver(upNextSchema),
     defaultValues: {
       title: item.title,
       type: item.type as "movie" | "show" | "live",
-      releaseDate: item.releaseDate ? new Date(item.releaseDate).toISOString().split('T')[0] : "" as any,
+      releaseDate: item.releaseDate ? new Date(item.releaseDate).toISOString().split('T')[0] : "",
       hasCosplay: item.hasCosplay,
       details: item.details || "",
     },
@@ -589,7 +592,7 @@ function EditUpNextModal({ item, onClose, onSave }: { item: UpNextItem, onClose:
       <DialogContent className="bg-zinc-950 border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
         <DialogHeader>
           <DialogTitle className="font-heading text-3xl font-black text-white">Edit Up Next Item</DialogTitle>
-          <DialogDescription className="text-zinc-500 font-sans">Modify the details for "{item.title}"</DialogDescription>
+          <DialogDescription className="text-zinc-500 font-sans">Modify the details for &quot;{item.title}&quot;</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSave)} className="space-y-6 py-4">
@@ -605,7 +608,7 @@ function EditUpNextModal({ item, onClose, onSave }: { item: UpNextItem, onClose:
 
             <div className="space-y-2">
               <Label className="font-sans text-zinc-300 font-bold">Type</Label>
-              <Select value={type} onValueChange={(v) => setValue("type", v as any)}>
+              <Select value={type} onValueChange={(v) => setValue("type", v as "movie" | "show" | "live")}>
                 <SelectTrigger className="w-full !h-12 text-base bg-white/5 border-white/10 text-zinc-100 rounded-xl font-sans">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>

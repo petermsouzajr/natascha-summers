@@ -69,10 +69,11 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, data: item });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Something went wrong.";
     console.error("Up Next error:", err);
     return NextResponse.json(
-      { success: false, message: err.message || "Something went wrong." },
+      { success: false, message: msg },
       { status: 500 }
     );
   }
@@ -129,14 +130,15 @@ export async function PATCH(req: NextRequest) {
 
     const updated = await prisma.upNext.update({
       where: { id },
-      data: parsed.data as any,
+      data: parsed.data,
     });
 
     return NextResponse.json({ success: true, data: updated });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Something went wrong.";
     console.error("Up Next update error:", err);
     return NextResponse.json(
-      { success: false, message: err.message || "Something went wrong." },
+      { success: false, message: msg },
       { status: 500 }
     );
   }
