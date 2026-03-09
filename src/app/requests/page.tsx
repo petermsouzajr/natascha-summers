@@ -38,7 +38,7 @@ function VoteRow({
   isLoggedIn: boolean;
 }) {
   const loginMessage = !isLoggedIn && (
-    <div className="absolute top-9 left-1/2 -translate-x-1/2 pointer-events-none whitespace-nowrap rounded-xl bg-onyx/95 border border-white/10 px-4 py-2 text-sm font-black text-white opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:top-7 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] z-30 backdrop-blur-md">
+    <div className="absolute top-9 font-sans left-1/2 -translate-x-1/2 pointer-events-none whitespace-nowrap rounded-xl bg-onyx/95 border border-white/10 px-4 py-2 text-sm font-black text-white opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:top-7 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] z-30 backdrop-blur-md">
       Sign in to vote ✨
       <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2.5 w-2.5 rotate-45 border-b border-r border-white/10 bg-onyx/95" />
     </div>
