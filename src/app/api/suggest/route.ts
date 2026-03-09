@@ -23,7 +23,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { title, type } = parsed.data;
+    const { title, type, firstname } = parsed.data;
+
+    if (firstname) {
+      return NextResponse.json(
+        { success: false, message: "Request rejected" },
+        { status: 400 }
+      );
+    }
 
     // Check if this was previously denied
     const existing = await prisma.contentSuggestion.findUnique({
@@ -79,10 +86,10 @@ export async function POST(req: NextRequest) {
       success: true,
       message: `"${title}" has been submitted for admin review!`,
     });
-  } catch (err) {
-    console.error("Suggest error:", err);
+  } catch (err: any) {
+    console.error("Suggest error:", err?.message ?? err);
     return NextResponse.json(
-      { success: false, message: "Something went wrong. Please try again." },
+      { success: false, message: err?.message || "Something went wrong. Please try again." },
       { status: 500 }
     );
   }

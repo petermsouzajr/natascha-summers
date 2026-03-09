@@ -16,7 +16,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { email, password } = parsed.data;
+    const { email, password, firstname } = parsed.data;
+
+    if (firstname) {
+      return NextResponse.json(
+        { success: false, message: "Request rejected" },
+        { status: 400 }
+      );
+    }
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {

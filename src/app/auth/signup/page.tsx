@@ -38,17 +38,22 @@ export default function SignupPage() {
 
   if (submitted) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-rose-500">Check your email!</CardTitle>
-            <CardDescription className="text-zinc-400">
+      <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+        </div>
+
+        <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl text-center">
+          <CardHeader>
+            <CardTitle className="font-heading text-3xl font-black text-primary mb-2">Check your email!</CardTitle>
+            <CardDescription className="font-sans text-zinc-400 font-medium">
               We sent a verification link to your email address. Click it to activate your account.
             </CardDescription>
           </CardHeader>
-          <CardFooter className="justify-center">
+          <CardFooter className="justify-center border-t border-white/5 mt-6 pt-6">
             <Link href="/auth/signin">
-              <Button variant="outline" className="border-zinc-700 text-zinc-300">
+              <Button variant="outline" className="font-sans border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white px-8 rounded-xl transition-all">
                 Back to Sign In
               </Button>
             </Link>
@@ -59,55 +64,71 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-2xl text-white">Create an account</CardTitle>
-          <CardDescription className="text-zinc-400">
+    <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+      </div>
+
+      <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+        <CardHeader className="space-y-1">
+          <CardTitle className="font-heading text-3xl font-black text-white">Create an account</CardTitle>
+          <CardDescription className="font-sans text-zinc-400">
             Sign up to vote for content and suggest reactions.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* Honeypot */}
+            <Input
+              type="text"
+              className="hidden"
+              {...register("firstname")}
+              tabIndex={-1}
+              autoComplete="off"
+            />
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-zinc-300">Email</Label>
+              <Label htmlFor="email" className="font-sans text-zinc-300 font-bold">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="you@example.com"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                className="font-sans h-12 bg-white/5 border-white/10 text-zinc-100 placeholder:text-zinc-500 focus:border-primary focus:ring-primary/20 rounded-xl"
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-rose-400">{errors.email.message}</p>
+                <p className="font-sans text-sm font-bold text-primary">{errors.email.message}</p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-zinc-300">Password</Label>
+              <Label htmlFor="password" className="font-sans text-zinc-300 font-bold">Password</Label>
               <Input
                 id="password"
                 type="password"
                 placeholder="At least 8 characters"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                className="font-sans h-12 bg-white/5 border-white/10 text-zinc-100 placeholder:text-zinc-500 focus:border-primary focus:ring-primary/20 rounded-xl"
                 {...register("password")}
               />
               {errors.password && (
-                <p className="text-sm text-rose-400">{errors.password.message}</p>
+                <p className="font-sans text-sm font-bold text-primary">{errors.password.message}</p>
               )}
             </div>
             <Button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-rose-600 hover:bg-rose-700 text-white"
+              disabled={true}
+              className="w-full h-12 font-sans bg-zinc-800 text-zinc-500 font-black text-lg rounded-xl cursor-not-allowed opacity-50"
             >
-              {isSubmitting ? "Creating account..." : "Create Account"}
+              Sign up disabled
             </Button>
+            <p className="font-sans text-xs text-center font-bold text-primary mt-2">
+              ⚠️ This is a demo site, you can not sign up yet
+            </p>
           </form>
         </CardContent>
-        <CardFooter className="justify-center">
-          <p className="text-sm text-zinc-400">
+        <CardFooter className="justify-center border-t border-white/5 mt-4 pt-6">
+          <p className="font-sans text-sm font-medium text-zinc-400">
             Already have an account?{" "}
-            <Link href="/auth/signin" className="text-rose-400 hover:text-rose-300">
+            <Link href="/auth/signin" className="text-primary font-bold hover:text-rose-400 transition-colors">
               Sign in
             </Link>
           </p>

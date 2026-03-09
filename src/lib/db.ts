@@ -1,8 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+// Bump this version string whenever the schema changes to force a fresh client.
+const SCHEMA_VERSION = "up-next-v3-no-url";
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  prismaSchemaVersion: string | undefined;
 };
 
 function createPrismaClient(): PrismaClient {
@@ -17,16 +21,16 @@ function createPrismaClient(): PrismaClient {
   });
 }
 
-export function getPrisma(): PrismaClient {
-  if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = createPrismaClient();
-  }
-  return globalForPrisma.prisma;
-}
+// Bust the cache if the schema version has changed.
+const needsFreshClient =
+  !globalForPrisma.prisma ||
+  globalForPrisma.prismaSchemaVersion !== SCHEMA_VERSION;
 
-// Lazy singleton – only instantiated on first access
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    return getPrisma()[prop as keyof PrismaClient];
-  },
-});
+export const prisma = needsFreshClient
+  ? createPrismaClient()
+  : globalForPrisma.prisma!;
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+  globalForPrisma.prismaSchemaVersion = SCHEMA_VERSION;
+}

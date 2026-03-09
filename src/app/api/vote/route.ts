@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { contentId, voteType } = parsed.data;
+    const { contentId, voteType, count = 1 } = parsed.data;
 
     const content = await prisma.contentSuggestion.findUnique({
       where: { id: contentId, status: "approved" },
@@ -42,37 +42,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "gbp",
-            product_data: {
-              name: `${voteType === "up" ? "Upvote" : "Downvote"} – ${content.title}`,
-              description: `Cast a ${voteType === "up" ? "👍" : "👎"} vote for "${content.title}"`,
-            },
-            unit_amount: 100, // £1.00
+    // We create multiple records to maintain history.
+    // Each needs a unique paymentId due to schema constraints.
+    await prisma.$transaction(
+      Array.from({ length: count }).map(() =>
+        prisma.vote.create({
+          data: {
+            contentId,
+            userId: user.userId,
+            voteType,
+            paymentId: `OFFLINE_${Math.random().toString(36).substring(2, 15)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
           },
-          quantity: 1,
-        },
-      ],
-      metadata: {
-        contentId: String(contentId),
-        voteType,
-        userId: user.userId,
-      },
-      success_url: `${appUrl}/requests?tab=${content.type}&success=true`,
-      cancel_url: `${appUrl}/requests?tab=${content.type}&cancelled=true`,
-    });
+        })
+      )
+    );
 
-    return NextResponse.json({ success: true, url: session.url });
+    return NextResponse.json({
+      success: true,
+      message: `Successfully cast ${count} ${voteType}${count > 1 ? "s" : ""}!`
+    });
   } catch (err) {
     console.error("Vote error:", err);
     return NextResponse.json(
-      { success: false, message: "Failed to create payment session." },
+      { success: false, message: "Failed to process vote." },
       { status: 500 }
     );
   }

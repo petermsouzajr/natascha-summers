@@ -62,15 +62,22 @@ function ResetContent() {
 
   if (resetDone) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md bg-zinc-900 border-zinc-800 text-center">
+      <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+        </div>
+
+        <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl text-center">
           <CardHeader>
-            <CardTitle className="text-2xl text-white">Password Reset!</CardTitle>
-            <CardDescription className="text-zinc-400">Your password has been updated successfully.</CardDescription>
+            <CardTitle className="font-heading text-3xl font-black text-white">Password Reset!</CardTitle>
+            <CardDescription className="font-sans text-zinc-400 font-medium pt-2">Your password has been updated successfully.</CardDescription>
           </CardHeader>
-          <CardFooter className="justify-center">
+          <CardFooter className="justify-center border-t border-white/5 mt-6 pt-6">
             <Link href="/auth/signin">
-              <Button className="bg-rose-600 hover:bg-rose-700 text-white">Sign In</Button>
+              <Button className="font-sans h-12 bg-primary hover:bg-rose-500 text-white font-black px-10 rounded-xl shadow-rose transition-all hover:scale-105">
+                Sign In
+              </Button>
             </Link>
           </CardFooter>
         </Card>
@@ -80,17 +87,24 @@ function ResetContent() {
 
   if (requestSent) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md bg-zinc-900 border-zinc-800 text-center">
+      <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+        </div>
+
+        <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl text-center">
           <CardHeader>
-            <CardTitle className="text-2xl text-white">Check your email</CardTitle>
-            <CardDescription className="text-zinc-400">
+            <CardTitle className="font-heading text-3xl font-black text-white">Check your email</CardTitle>
+            <CardDescription className="font-sans text-zinc-400 font-medium pt-2">
               If an account exists with that email, we sent a reset link.
             </CardDescription>
           </CardHeader>
-          <CardFooter className="justify-center">
+          <CardFooter className="justify-center border-t border-white/5 mt-6 pt-6">
             <Link href="/auth/signin">
-              <Button variant="outline" className="border-zinc-700 text-zinc-300">Back to Sign In</Button>
+              <Button variant="outline" className="font-sans border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white px-8 rounded-xl transition-all">
+                Back to Sign In
+              </Button>
             </Link>
           </CardFooter>
         </Card>
@@ -101,31 +115,36 @@ function ResetContent() {
   // If token is in URL, show new password form
   if (token) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4">
-        <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
-          <CardHeader>
-            <CardTitle className="text-2xl text-white">Set New Password</CardTitle>
-            <CardDescription className="text-zinc-400">Enter your new password below.</CardDescription>
+      <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+        </div>
+
+        <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+          <CardHeader className="space-y-1">
+            <CardTitle className="font-heading text-3xl font-black text-white">Set New Password</CardTitle>
+            <CardDescription className="font-sans text-zinc-400">Enter your new password below.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={newPasswordForm.handleSubmit(onNewPassword)} className="space-y-4">
+            <form onSubmit={newPasswordForm.handleSubmit(onNewPassword)} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-zinc-300">New Password</Label>
+                <Label htmlFor="password" className="font-sans text-zinc-300 font-bold">New Password</Label>
                 <Input
                   id="password"
                   type="password"
                   placeholder="At least 8 characters"
-                  className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                  className="font-sans h-12 bg-white/5 border-white/10 text-zinc-100 placeholder:text-zinc-500 focus:border-primary focus:ring-primary/20 rounded-xl"
                   {...newPasswordForm.register("password")}
                 />
                 {newPasswordForm.formState.errors.password && (
-                  <p className="text-sm text-rose-400">{newPasswordForm.formState.errors.password.message}</p>
+                  <p className="font-sans text-sm font-bold text-primary">{newPasswordForm.formState.errors.password.message}</p>
                 )}
               </div>
               <Button
                 type="submit"
                 disabled={newPasswordForm.formState.isSubmitting}
-                className="w-full bg-rose-600 hover:bg-rose-700 text-white"
+                className="w-full h-12 font-sans bg-primary hover:bg-rose-500 text-white font-black text-lg rounded-xl shadow-rose transition-all hover:scale-[1.02] hover:shadow-rose-lg"
               >
                 {newPasswordForm.formState.isSubmitting ? "Resetting..." : "Reset Password"}
               </Button>
@@ -137,40 +156,45 @@ function ResetContent() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-2xl text-white">Reset Password</CardTitle>
-          <CardDescription className="text-zinc-400">
+    <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+      </div>
+
+      <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+        <CardHeader className="space-y-1">
+          <CardTitle className="font-heading text-3xl font-black text-white">Reset Password</CardTitle>
+          <CardDescription className="font-sans text-zinc-400">
             Enter your email and we&apos;ll send a reset link.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={requestForm.handleSubmit(onRequestReset)} className="space-y-4">
+          <form onSubmit={requestForm.handleSubmit(onRequestReset)} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-zinc-300">Email</Label>
+              <Label htmlFor="email" className="font-sans text-zinc-300 font-bold">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="you@example.com"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                className="font-sans h-12 bg-white/5 border-white/10 text-zinc-100 placeholder:text-zinc-500 focus:border-primary focus:ring-primary/20 rounded-xl"
                 {...requestForm.register("email")}
               />
               {requestForm.formState.errors.email && (
-                <p className="text-sm text-rose-400">{requestForm.formState.errors.email.message}</p>
+                <p className="font-sans text-sm font-bold text-primary">{requestForm.formState.errors.email.message}</p>
               )}
             </div>
             <Button
               type="submit"
               disabled={requestForm.formState.isSubmitting}
-              className="w-full bg-rose-600 hover:bg-rose-700 text-white"
+              className="w-full h-12 font-sans bg-primary hover:bg-rose-500 text-white font-black text-lg rounded-xl shadow-rose transition-all hover:scale-[1.02] hover:shadow-rose-lg"
             >
               {requestForm.formState.isSubmitting ? "Sending..." : "Send Reset Link"}
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="justify-center">
-          <Link href="/auth/signin" className="text-sm text-zinc-400 hover:text-rose-400">
+        <CardFooter className="justify-center border-t border-white/5 mt-4 pt-6">
+          <Link href="/auth/signin" className="font-sans text-sm font-bold text-zinc-400 hover:text-primary transition-colors">
             Back to Sign In
           </Link>
         </CardFooter>

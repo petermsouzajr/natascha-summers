@@ -42,30 +42,35 @@ function VerifyContent() {
   }, [token]);
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800 text-center">
-        <CardHeader>
-          {status === "loading" && <Loader2 className="mx-auto h-12 w-12 animate-spin text-rose-500" />}
-          {status === "success" && <CheckCircle className="mx-auto h-12 w-12 text-green-500" />}
-          {status === "error" && <XCircle className="mx-auto h-12 w-12 text-rose-500" />}
-          <CardTitle className="text-xl text-white">
+    <div className="flex min-h-[80vh] items-center justify-center px-4 bg-onyx relative overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+      </div>
+
+      <Card className="relative z-10 w-full max-w-md bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl text-center">
+        <CardHeader className="space-y-2">
+          {status === "loading" && <Loader2 className="mx-auto h-16 w-16 animate-spin text-primary" />}
+          {status === "success" && <CheckCircle className="mx-auto h-16 w-16 text-emerald-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />}
+          {status === "error" && <XCircle className="mx-auto h-16 w-16 text-primary drop-shadow-[0_0_10px_rgba(251,63,96,0.3)]" />}
+          <CardTitle className="font-heading text-3xl font-black text-white pt-2">
             {status === "loading" && "Verifying..."}
             {status === "success" && "Email Verified!"}
             {status === "error" && "Verification Failed"}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-zinc-400">{message}</p>
+        <CardContent className="space-y-6">
+          <p className="font-sans text-lg font-medium text-zinc-400">{message}</p>
           {status === "success" && (
             <Link href="/auth/signin">
-              <Button className="bg-rose-600 hover:bg-rose-700 text-white">
+              <Button className="font-sans h-12 bg-primary hover:bg-rose-500 text-white font-black px-10 rounded-xl shadow-rose transition-all hover:scale-105">
                 Sign In Now
               </Button>
             </Link>
           )}
           {status === "error" && (
             <Link href="/auth/signup">
-              <Button variant="outline" className="border-zinc-700 text-zinc-300">
+              <Button variant="outline" className="font-sans border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white px-8 rounded-xl transition-all">
                 Try Signing Up Again
               </Button>
             </Link>

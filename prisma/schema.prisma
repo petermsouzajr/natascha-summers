@@ -53,13 +53,14 @@ model Vote {
   @@map("votes")
 }
 
-model RecentContent {
+model UpNext {
   id          Int      @id @default(autoincrement())
   title       String
   type        String
-  youtubeLink String?
-  posterUrl   String?
+  releaseDate DateTime? @map("release_date")
+  hasCosplay  Boolean  @default(false) @map("has_cosplay")
+  details     String?
   createdAt   DateTime @default(now())
 
-  @@map("recent_content")
+  @@map("up_next")
 }

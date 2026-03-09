@@ -7,7 +7,7 @@
  *   Users          → email ends with  @seed.nataschasummers.com
  *   Votes          → paymentId starts with  seed_pay_
  *   ContentSuggestions → suggestedBy is a seed user (cleaned via user IDs)
- *   RecentContent  → youtubeLink contains  seed_natsummers
+ *   UpNext         → youtubeLink contains  seed_natsummers
  *
  * Run:
  *   npm run db:seed          # clear existing seed data, then re-seed
@@ -24,9 +24,9 @@ import bcrypt from "bcryptjs";
 
 // ─── Seed Markers ─────────────────────────────────────────────────────────────
 
-const SEED_EMAIL_SUFFIX = "@seed.nataschasummers.com";
+const SEED_EMAIL_SUFFIX = "@seed.nablaschablummers.com";
 const SEED_PAYMENT_PREFIX = "seed_pay_";
-const SEED_YOUTUBE_MARKER = "seed_natsummers";
+const SEED_YOUTUBE_MARKER = "seed_natblummers";
 
 // ─── DB Client ────────────────────────────────────────────────────────────────
 
@@ -35,7 +35,7 @@ function createClient(): PrismaClient {
   if (!connectionString) {
     throw new Error(
       "DATABASE_URL is not set.\n" +
-        "Copy .env.example to .env.local and fill in your database URL."
+      "Copy .env.example to .env.local and fill in your database URL."
     );
   }
   const adapter = new PrismaPg({ connectionString });
@@ -197,37 +197,28 @@ const VOTE_PLAN: Array<[number, string, "up" | "down"]> = [
   [0, "Mark Rober: Glitter Bomb 7.0 vs Package Thieves", "up"], // net +3
 ];
 
-// Recent content for the homepage grid (seeded for visual completeness)
-const SEED_RECENT = [
+// Up Next content for the homepage grid (seeded for visual completeness)
+const SEED_UP_NEXT = [
   {
     title: "Dune: Part Two Full Reaction",
     type: "movie",
-    youtubeLink: `https://www.youtube.com/watch?v=SEED_NS_MOV001&ref=${SEED_YOUTUBE_MARKER}`,
-    posterUrl: null,
+    releaseDate: new Date("2026-03-15"),
+    hasCosplay: true,
+    details: "Drunk stream incoming!",
   },
   {
     title: "Oppenheimer 3-Hour Reaction",
     type: "movie",
-    youtubeLink: `https://www.youtube.com/watch?v=SEED_NS_MOV002&ref=${SEED_YOUTUBE_MARKER}`,
-    posterUrl: null,
+    releaseDate: new Date("2026-03-20"),
+    hasCosplay: false,
+    details: "Breaking down the physics.",
   },
   {
     title: "The Bear S3 Episode 1 – I Wasn't Ready",
     type: "show",
-    youtubeLink: `https://www.youtube.com/watch?v=SEED_NS_SHW001&ref=${SEED_YOUTUBE_MARKER}`,
-    posterUrl: null,
-  },
-  {
-    title: "Baby Reindeer – I Cried Three Times",
-    type: "show",
-    youtubeLink: `https://www.youtube.com/watch?v=SEED_NS_SHW002&ref=${SEED_YOUTUBE_MARKER}`,
-    posterUrl: null,
-  },
-  {
-    title: "Watch Party – Hot Ones Live Stream",
-    type: "live",
-    youtubeLink: `https://www.youtube.com/watch?v=SEED_NS_LVE001&ref=${SEED_YOUTUBE_MARKER}`,
-    posterUrl: null,
+    releaseDate: new Date("2026-03-22"),
+    hasCosplay: false,
+    details: "Chef's kiss reaction.",
   },
 ];
 
@@ -235,7 +226,7 @@ const SEED_RECENT = [
 
 async function seed() {
   const prisma = createClient();
-  console.log("🌱 Seeding natascha-summers database...\n");
+  console.log("🌱 Seeding nablascha blummers database...\n");
 
   // Always start clean so re-running is idempotent
   await clearData(prisma);
@@ -319,12 +310,12 @@ async function seed() {
   }
   console.log(`   ✅ ${voteCount} votes created`);
 
-  // ── Recent Content ───────────────────────────────────────────────
-  console.log("📺 Creating recent content...");
-  const recentItems = await Promise.all(
-    SEED_RECENT.map((item) => prisma.recentContent.create({ data: item }))
+  // ── Up Next Content ───────────────────────────────────────────────
+  console.log("📺 Creating up next content...");
+  const upNextItems = await Promise.all(
+    SEED_UP_NEXT.map((item) => prisma.upNext.create({ data: item }))
   );
-  console.log(`   ✅ ${recentItems.length} recent content items`);
+  console.log(`   ✅ ${upNextItems.length} up next items`);
 
   await prisma.$disconnect();
 
@@ -380,16 +371,16 @@ async function clearData(prisma: PrismaClient) {
     where: { email: { endsWith: SEED_EMAIL_SUFFIX } },
   });
 
-  // 5. Delete seed recent content (identified by YouTube URL marker)
-  const recent = await prisma.recentContent.deleteMany({
+  // 5. Delete seed up next content (identified by YouTube URL marker)
+  const upNext = await prisma.upNext.deleteMany({
     where: { youtubeLink: { contains: SEED_YOUTUBE_MARKER } },
   });
 
-  const total = votes.count + suggestions.count + users.count + recent.count;
+  const total = votes.count + suggestions.count + users.count + upNext.count;
   if (total > 0) {
     console.log(
       `   Removed: ${votes.count} votes · ${suggestions.count} suggestions · ` +
-        `${users.count} users · ${recent.count} recent items`
+      `${users.count} users · ${upNext.count} up next items`
     );
   } else {
     console.log("   Nothing to remove (no seed data found)");
