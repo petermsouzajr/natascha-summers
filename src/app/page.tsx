@@ -196,6 +196,22 @@ export default function HomePage() {
           </Link>
         </section>
       )}
+
+      {/* youtube embed */}
+      <section className="mx-auto max-w-7xl px-6 pb-32">
+        <div className="mb-14 flex flex-col items-center">
+          <h2 className="font-heading text-6xl font-black text-primary leading-none text-center">Youtube</h2>
+          <div className="mt-6 h-1 w-24 bg-primary/20 rounded-full" />
+        </div>
+        <div className="w-full flex justify-center">
+          <div className="flex flex-wrap justify-center gap-10 max-w-4xl">
+            <div style={{ width: "176px", flexShrink: 0 }}>
+              Your Youtube videos will display here
+              {/* embed iframe here */}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
