@@ -40,6 +40,12 @@ export default function Navbar() {
             </span>
           </Link>
 
+          <Link href="/fireside">
+            <span className="font-sans inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-md font-bold text-zinc-300 transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:bg-white/10 hover:text-white hover:shadow-rose cursor-pointer">
+              🔥 Blodneys Fireside
+            </span>
+          </Link>
+
           {/* Divider */}
           <div className="mx-2 h-6 w-px bg-white/10" />
 

@@ -34,6 +34,7 @@ export const suggestSchema = z.object({
     .max(200, "Title too long")
     .transform((s) => s.trim()),
   type: z.enum(["movie", "show", "other"]),
+  tag: z.string().optional(),
   firstname: z.string().optional(),
 });
 

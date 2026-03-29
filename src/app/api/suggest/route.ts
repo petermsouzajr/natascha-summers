@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { title, type, firstname } = parsed.data;
+    const { title, type, tag, firstname } = parsed.data;
 
     if (firstname) {
       return NextResponse.json(
@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         type,
+        tag,
         tmdbId,
         posterUrl,
         suggestedBy: user.userId,

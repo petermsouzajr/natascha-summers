@@ -26,6 +26,7 @@ model ContentSuggestion {
   id          Int      @id @default(autoincrement())
   title       String
   type        String
+  tag         String?
   tmdbId      String?
   posterUrl   String?
   status      String   @default("pending")
